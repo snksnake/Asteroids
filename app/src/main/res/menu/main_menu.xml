@@ -7,6 +7,11 @@
         android:icon="@android:drawable/ic_menu_preferences"
         android:orderInCategory="5"
         app:showAsAction="never"/>
+    <item android:id="@+id/score_list"
+        android:title="@string/scores"
+        android:icon="@android:drawable/btn_star"
+        android:orderInCategory="5"
+        app:showAsAction="never"/>
     <item android:title="@string/about"
         android:id="@+id/aboutId"
         android:icon="@android:drawable/ic_menu_info_details"

@@ -11,4 +11,5 @@
     <string name="btn_ej2_message2">veces</string>
     <string name="about_text">Aplicacion Asteroides desarrollada para el master en desarrollo de aplicaciones Android</string>
     <string name="settings">Preferencias</string>
+    <string name="scores">Puntuaciones</string>
 </resources>

@@ -65,8 +65,7 @@ public class MainActivity extends AppCompatActivity {
         btnPlay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(MainActivity.this, Score.class);
-                startActivity(i);
+                
             }
         });
     }
@@ -99,10 +98,15 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
             return true;
         }
+        if (id == R.id.score_list) {
+            final Intent intent = new Intent(MainActivity.this, Score.class);
+            startActivity(intent);
+            return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 
-    public void mostrarPreferencias(){
+    public void showPreferences(){
         SharedPreferences pref =
                 PreferenceManager.getDefaultSharedPreferences(this);
         String s = "música: " + pref.getBoolean("musica",true)

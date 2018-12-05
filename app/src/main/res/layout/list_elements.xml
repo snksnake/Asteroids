@@ -27,6 +27,5 @@
         android:layout_below="@id/titulo"
         android:layout_alignParentBottom="true"
         android:layout_toRightOf="@id/icono"
-        android:gravity="center"
-        android:text="Otro Texto" />
+        android:gravity="center"/>
 </RelativeLayout>
