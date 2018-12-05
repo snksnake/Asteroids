@@ -4,6 +4,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.Toast;
+
 import adapters.Adapter;
 
 public class Score extends AppCompatActivity {
@@ -20,5 +23,13 @@ public class Score extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
+        adapter.setOnItemClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int pos = recyclerView.getChildAdapterPosition(v);
+                String s = MainActivity.scores.listScore(10).get(pos);
+                Toast.makeText(Score.this, "Selección: " + pos + " - " + s, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }
