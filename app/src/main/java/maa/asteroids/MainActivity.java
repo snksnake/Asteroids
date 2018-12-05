@@ -1,14 +1,17 @@
 package maa.asteroids;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.Button;
+
+import java.util.prefs.AbstractPreferences;
 
 public class MainActivity extends AppCompatActivity {
+    Button btnAbout, btnExit;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -16,12 +19,30 @@ public class MainActivity extends AppCompatActivity {
         int currentOrientation = getResources().getConfiguration().orientation;
         if (currentOrientation == Configuration.ORIENTATION_PORTRAIT)
         {
-            setContentView(R.layout.tab1_view_portrait);
+            setContentView(R.layout.main_landscape);
         }
         else
         {
-            setContentView(R.layout.tab1_view);
+            setContentView(R.layout.main_portrait);
         }
+
+        btnAbout = findViewById(R.id.btn_about);
+        btnExit = findViewById(R.id.btn_exit);
+
+        btnAbout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Intent intent = new Intent(MainActivity.this, About.class);
+                startActivity(intent);
+            }
+        });
+
+        btnExit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     @Override

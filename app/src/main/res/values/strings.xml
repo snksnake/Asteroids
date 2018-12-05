@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">PerezA_U2</string>
+    <string name="app_name">Asteroids</string>
     <string name="asteroidstext">Asteroids</string>
     <string name="playtext">Play</string>
     <string name="conftext">Configuration</string>
@@ -9,4 +9,5 @@
     <string name="btn_ej2">Press me!</string>
     <string name="btn_ej2_message">You have pressed button</string>
     <string name="btn_ej2_message2">times</string>
+    <string name="about_text">Asteroids application developed for Android Master Developer</string>
 </resources>
