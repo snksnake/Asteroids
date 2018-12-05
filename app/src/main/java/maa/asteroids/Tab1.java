@@ -1,26 +1,32 @@
 package maa.asteroids;
 
 import android.content.res.Configuration;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class MainActivity extends AppCompatActivity {
+
+public class Tab1 extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
         int currentOrientation = getResources().getConfiguration().orientation;
         if (currentOrientation == Configuration.ORIENTATION_PORTRAIT)
         {
-            setContentView(R.layout.tab1_view_portrait);
+            return inflater.inflate(R.layout.tab1_view_portrait, container, false);
         }
         else
         {
-            setContentView(R.layout.tab1_view);
+            return inflater.inflate(R.layout.tab1_view, container, false);
         }
     }
 
@@ -35,4 +41,5 @@ public class MainActivity extends AppCompatActivity {
             Log.d("CONFIG", "Pantalla en Portrait");
         }
     }
+
 }

@@ -1,3 +1,12 @@
 <resources>
-    <string name="app_name">Asteroids</string>
+    <string name="app_name">PerezA_U2</string>
+    <string name="asteroidstext">Asteroids</string>
+    <string name="playtext">Play</string>
+    <string name="conftext">Configuration</string>
+    <string name="about">About</string>
+    <string name="exit">Exit</string>
+    <string name="lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam sed imperdiet nisl. Phasellus purus magna, accumsan vitae nisl maximus, luctus efficitur felis. Nunc ornare nunc et tortor tincidunt aliquet. Praesent mollis, augue ac tristique gravida, leo odio vehicula justo, id vehicula ex libero et sapien. In a sem iaculis, suscipit mi nec, ultrices leo. Etiam nisl nulla, rutrum ut neque eget, interdum dictum orci. Mauris sit amet eros at sem interdum lacinia id iaculis eros.</string>
+    <string name="btn_ej2">Press me!</string>
+    <string name="btn_ej2_message">You have pressed button</string>
+    <string name="btn_ej2_message2">times</string>
 </resources>

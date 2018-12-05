@@ -3,4 +3,17 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
+    <color name="darkScreencolor">#00274F</color>
+    <color name="buttonBackground">#ff9966</color>
+
+    <color name="buttonPlay">#5DADE2</color>
+    <color name="buttonAbout">#58D68D</color>
+    <color name="buttonExit">#EC7063</color>
+    <color name="buttonConfig">#F9E79F</color>
+
+    <color name="backgroundLayout">#D7DBDD</color>
+
+    <color name="gradientEnd">#d8f0f3</color>
+
+    <color name="graddientTop">#80ced6</color>
 </resources>

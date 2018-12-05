@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/gradient_background">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/title"
+                style="@style/TittleStyles"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/asteroidstext" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btn_play"
+                    style="@style/ButtonStyles"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@color/buttonPlay"
+                    android:text="@string/playtext"
+                    android:drawableLeft="@mipmap/img_play"
+                    android:drawablePadding="5dp"/>
+
+                <Button
+                    android:id="@+id/btn_confi"
+                    style="@style/ButtonStyles"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@color/buttonConfig"
+                    android:text="@string/conftext"
+                    android:drawableLeft="@mipmap/img_config"
+                    android:drawablePadding="5dp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btn_about"
+                    style="@style/ButtonStyles"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@color/buttonAbout"
+                    android:text="@string/about"
+                    android:drawableLeft="@mipmap/img_about"
+                    android:drawablePadding="5dp"/>
+
+                <Button
+                    android:id="@+id/btn_exit"
+                    style="@style/ButtonStyles"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@color/buttonExit"
+                    android:text="@string/exit"
+                    android:drawableLeft="@mipmap/img_logout"
+                    android:drawablePadding="5dp"/>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</android.support.constraint.ConstraintLayout>
