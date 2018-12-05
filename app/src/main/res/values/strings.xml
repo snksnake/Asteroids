@@ -10,4 +10,5 @@
     <string name="btn_ej2_message">You have pressed button</string>
     <string name="btn_ej2_message2">times</string>
     <string name="about_text">Asteroids application developed for Android Master Developer</string>
+    <string name="settings">Settings</string>
 </resources>
