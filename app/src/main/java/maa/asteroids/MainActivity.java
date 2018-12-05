@@ -13,7 +13,7 @@ import android.widget.Button;
 import java.util.prefs.AbstractPreferences;
 
 public class MainActivity extends AppCompatActivity {
-    Button btnAbout, btnExit;
+    Button btnAbout, btnExit, btnSettings;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
 
         btnAbout = findViewById(R.id.btn_about);
         btnExit = findViewById(R.id.btn_exit);
+        btnSettings = findViewById(R.id.btn_confi);
 
         btnAbout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -43,6 +44,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 finish();
+            }
+        });
+
+        btnSettings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Intent intent = new Intent(MainActivity.this, Settings.class);
+                startActivity(intent);
             }
         });
     }
@@ -66,9 +75,11 @@ public class MainActivity extends AppCompatActivity {
     @Override public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_settings) {
+            final Intent intent = new Intent(MainActivity.this, Settings.class);
+            startActivity(intent);
             return true;
         }
-        if (id == R.id.acercaDe) {
+        if (id == R.id.aboutId) {
             final Intent intent = new Intent(MainActivity.this, About.class);
             startActivity(intent);
             return true;
