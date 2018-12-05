@@ -19,7 +19,8 @@
         <activity
             android:name=".About"
             android:theme="@style/Theme.AppCompat.Dialog" />
-        <activity android:name=".Settings"></activity>
+        <activity android:name=".Settings" />
+        <activity android:name=".Score"></activity>
     </application>
 
 </manifest>

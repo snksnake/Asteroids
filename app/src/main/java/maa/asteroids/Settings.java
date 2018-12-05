@@ -1,7 +1,10 @@
 package maa.asteroids;
 
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.Toast;
 
 public class Settings extends AppCompatActivity {
 
