@@ -5,9 +5,11 @@
     <item android:id="@+id/action_settings"
         android:title="@string/settings"
         android:icon="@android:drawable/ic_menu_preferences"
-        android:orderInCategory="100"
+        android:orderInCategory="5"
         app:showAsAction="never"/>
     <item android:title="@string/about"
         android:id="@+id/acercaDe"
-        android:icon="@android:drawable/ic_menu_info_details"/>
+        android:icon="@android:drawable/ic_menu_info_details"
+        android:orderInCategory="10"
+        app:showAsAction="ifRoom|withText"/>
 </menu>
