@@ -1,37 +1,39 @@
 package maa.asteroids;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Vector;
-
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.PathShape;
+import android.graphics.drawable.shapes.RectShape;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.SoundPool;
-import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.graphics.drawable.VectorDrawableCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.content.res.AppCompatResources;
 import android.util.AttributeSet;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageView;
 
-import maa.asteroids.Graphic;
-import maa.asteroids.R;
+import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class GameView extends View {
     private List<Graphic> asteroides; // Lista con los Asteroides
@@ -52,12 +54,13 @@ public class GameView extends View {
     private static int PERIODO_PROCESO = 50;
     // Cuando se realizó el último proceso
     private long ultimoProceso = 0;
+    Drawable drawableNave;
+    Drawable drawableAsteroide;
+    Drawable drawableMisil;
 
     public GameView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        Drawable drawableNave;
-        Drawable drawableAsteroide;
-        Drawable drawableMisil;
+
         Resources resources = context.getResources();
         //drawableAsteroide = AppCompatResources.getDrawable(context, R.drawable.asteroide1);
 
@@ -88,9 +91,11 @@ public class GameView extends View {
             setLayerType(View.LAYER_TYPE_HARDWARE, null);
             drawableAsteroide =
                     AppCompatResources.getDrawable(context, R.drawable.asteroide1);
+            drawableNave =
+                    AppCompatResources.getDrawable(context, R.drawable.nave);
         }
-        nave = new Graphic(this, resources.getDrawable(R.drawable.nave));
-        asteroides = new ArrayList<Graphic>();
+
+        asteroides = new ArrayList<>();
         for (int i = 0; i < numAsteroides; i++) {
             Graphic asteroide = new Graphic(this, drawableAsteroide);
             asteroide.setIncY(Math.random() * 4 - 2);
@@ -99,17 +104,20 @@ public class GameView extends View {
             asteroide.setRotacion((int) (Math.random() * 8 - 4));
             asteroides.add(asteroide);
         }
+        nave = new Graphic(this, drawableNave);
     }
 
     @Override
     protected void onSizeChanged(int ancho, int alto, int ancho_anter, int alto_anter) {
         super.onSizeChanged(ancho, alto, ancho_anter, alto_anter);
+        nave.setCenX(ancho / 2);
+        nave.setCenY(alto / 2);
 // Una vez que conocemos nuestro ancho y alto.
         for (Graphic asteroide : asteroides) {
-            //do {
-                asteroide.setPosX((int) (Math.random()*ancho));
-                asteroide.setPosY((int) (Math.random()*alto));
-            //} while(asteroide.distancia(nave) < (ancho+alto)/5);
+            do {
+                asteroide.setCenX((int) (Math.random()*ancho));
+                asteroide.setCenY((int) (Math.random()*alto));
+            } while(asteroide.distancia(nave) < (ancho+alto)/5);
         }
         ultimoProceso = System.currentTimeMillis();
         thread.start();
@@ -121,6 +129,7 @@ public class GameView extends View {
         for (Graphic asteroide : asteroides) {
             asteroide.dibujaGrafico(canvas);
         }
+        nave.dibujaGrafico(canvas);
     }
     protected void actualizaFisica() {
         long ahora = System.currentTimeMillis();

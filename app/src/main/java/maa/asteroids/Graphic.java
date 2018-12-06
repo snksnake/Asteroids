@@ -155,5 +155,21 @@ public class Graphic {
     public void setRotacion(double rotacion) {
         this.rotacion = rotacion;
     }
+
+    public int getCenX() {
+        return cenX;
+    }
+
+    public void setCenX(int cenX) {
+        this.cenX = cenX;
+    }
+
+    public int getCenY() {
+        return cenY;
+    }
+
+    public void setCenY(int cenY) {
+        this.cenY = cenY;
+    }
 }
 
