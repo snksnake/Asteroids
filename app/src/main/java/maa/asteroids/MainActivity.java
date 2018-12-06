@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
@@ -27,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     Button btnAbout, btnExit, btnSettings, btnPlay;
     private TextView txTitle;
     public static StorageScore scores = new StorageScoreList();
+    MediaPlayer mp;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -43,6 +45,9 @@ public class MainActivity extends AppCompatActivity {
         btnSettings = findViewById(R.id.btn_confi);
         btnPlay = findViewById(R.id.btn_play);
         txTitle = findViewById(R.id.title);
+
+        mp = MediaPlayer.create(this, R.raw.gamesound);
+        mp.start();
 
         btnAbout.setOnClickListener(new View.OnClickListener() {
             @Override

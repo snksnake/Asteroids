@@ -254,13 +254,43 @@ public class GameView extends View implements SensorEventListener {
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
     }
 
-    private class ThreadJuego extends Thread {
-        @Override
-        public void run() {
-            while (true) {
-                actualizaFisica();
+    public class ThreadJuego extends Thread {
+        private boolean pause, running;
+
+        public synchronized void continueGame() {
+            pause = false;
+            ultimoProceso = System.currentTimeMillis();
+            notify();
+        }
+
+        public synchronized void pauseGame() {
+            pause = true;
+            notify();
+        }
+
+        public void stopGame() {
+            running = false;
+            if (pause) {
+                continueGame();
             }
         }
+
+        @Override
+        public void run() {
+            running = true;
+            while (running) {
+                actualizaFisica();
+                synchronized (this) {
+                    while (pause) {
+                        try {
+                            wait();
+                        } catch (Exception ignored) {}
+                    }
+                }
+            }
+        }
+
+
     }
 
     @Override
@@ -360,13 +390,12 @@ public class GameView extends View implements SensorEventListener {
         }
     }
 
-    public ThreadJuego getThread() {
-        return thread;
+    public void disableSensors(Context context) {
+        SensorManager mSensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
+        mSensorManager.unregisterListener(this);
     }
 
-    public synchronized void continueGame() {
-        pause = false;
-        ultimoProceso = System.currentTimeMillis();
-        notify();
+    public ThreadJuego getThread() {
+        return thread;
     }
 }

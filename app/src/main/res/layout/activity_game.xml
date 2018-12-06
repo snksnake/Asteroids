@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <maa.asteroids.GameView
-        android:id="@+id/VistaJuego"
+        android:id="@+id/game_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:focusable="true"
