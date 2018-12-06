@@ -10,7 +10,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.prefs.AbstractPreferences;
@@ -19,6 +22,7 @@ import interfaces.StorageScore;
 
 public class MainActivity extends AppCompatActivity {
     Button btnAbout, btnExit, btnSettings, btnPlay;
+    private TextView txTitle;
     public static StorageScore scores = new StorageScoreList();
 
     @Override
@@ -38,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
         btnExit = findViewById(R.id.btn_exit);
         btnSettings = findViewById(R.id.btn_confi);
         btnPlay = findViewById(R.id.btn_play);
+        txTitle = findViewById(R.id.title);
 
         btnAbout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,6 +74,10 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        Animation animacion = AnimationUtils.loadAnimation(this,
+                R.anim.giro_con_zoom);
+        txTitle.startAnimation(animacion);
     }
 
     @Override

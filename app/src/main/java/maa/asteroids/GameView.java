@@ -11,7 +11,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.PathShape;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -43,9 +48,40 @@ public class GameView extends View {
 
     public GameView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        Drawable drawableNave, drawableAsteroide, drawableMisil;
+        Drawable drawableNave;
+        Drawable drawableAsteroide;
+        Drawable drawableMisil;
         Resources resources = context.getResources();
-        drawableAsteroide = AppCompatResources.getDrawable(context, R.drawable.asteroide1);
+        //drawableAsteroide = AppCompatResources.getDrawable(context, R.drawable.asteroide1);
+
+        SharedPreferences pref = PreferenceManager. getDefaultSharedPreferences(getContext());
+        if (pref.getString("graficos", "1").equals("0")) {
+            setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+            Path pathAsteroide = new Path();
+            pathAsteroide.moveTo((float) 0.3, (float) 0.0);
+            pathAsteroide.lineTo((float) 0.6, (float) 0.0);
+            pathAsteroide.lineTo((float) 0.6, (float) 0.3);
+            pathAsteroide.lineTo((float) 0.8, (float) 0.2);
+            pathAsteroide.lineTo((float) 1.0, (float) 0.4);
+            pathAsteroide.lineTo((float) 0.8, (float) 0.6);
+            pathAsteroide.lineTo((float) 0.9, (float) 0.9);
+            pathAsteroide.lineTo((float) 0.8, (float) 1.0);
+            pathAsteroide.lineTo((float) 0.4, (float) 1.0);
+            pathAsteroide.lineTo((float) 0.0, (float) 0.6);
+            pathAsteroide.lineTo((float) 0.0, (float) 0.2);
+            pathAsteroide.lineTo((float) 0.3, (float) 0.0);
+            ShapeDrawable dAsteroide = new ShapeDrawable( new PathShape(pathAsteroide, 1, 1));
+            dAsteroide.getPaint().setColor(Color.WHITE);
+            dAsteroide.getPaint().setStyle(Paint.Style.STROKE);
+            dAsteroide.setIntrinsicWidth(50);
+            dAsteroide.setIntrinsicHeight(50);
+            drawableAsteroide = dAsteroide;
+            setBackgroundColor(Color.BLACK);
+        } else {
+            setLayerType(View.LAYER_TYPE_HARDWARE, null);
+            drawableAsteroide =
+                    AppCompatResources.getDrawable(context, R.drawable.asteroide1);
+        }
         nave = new Graphic(this, resources.getDrawable(R.drawable.nave));
         asteroides = new ArrayList<Graphic>();
         for (int i = 0; i < numAsteroides; i++) {
