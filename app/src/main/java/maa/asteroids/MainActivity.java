@@ -1,8 +1,11 @@
 package maa.asteroids;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.os.AsyncTask;
+import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -29,12 +32,9 @@ public class MainActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         int currentOrientation = getResources().getConfiguration().orientation;
-        if (currentOrientation == Configuration.ORIENTATION_PORTRAIT)
-        {
+        if (currentOrientation == Configuration.ORIENTATION_PORTRAIT) {
             setContentView(R.layout.main_landscape);
-        }
-        else
-        {
+        } else {
             setContentView(R.layout.main_portrait);
         }
 
@@ -87,16 +87,19 @@ public class MainActivity extends AppCompatActivity {
         // Checks the orientation of the screen
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             Log.d("CONFIG", "Pantalla en Landscape");
-        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
+        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
             Log.d("CONFIG", "Pantalla en Portrait");
         }
     }
 
-    @Override public boolean onCreateOptionsMenu(Menu menu) {
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
         return true; /** true -> el menú ya está visible */
     }
-    @Override public boolean onOptionsItemSelected(MenuItem item) {
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_settings) {
             final Intent intent = new Intent(MainActivity.this, Settings.class);
@@ -116,11 +119,49 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void showPreferences(){
+    public void showPreferences() {
         SharedPreferences pref =
                 PreferenceManager.getDefaultSharedPreferences(this);
-        String s = "música: " + pref.getBoolean("musica",true)
-                +", gráficos: " + pref.getString("graficos","?");
+        String s = "música: " + pref.getBoolean("musica", true)
+                + ", gráficos: " + pref.getString("graficos", "?");
         Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
     }
+
+    //No necesaria implementacion, solo probar dejo como esta (Revisar antes de la entrega)
+    private class MyTask extends AsyncTask<Integer, Integer, Integer> {
+        private ProgressDialog progreso;
+
+        @Override
+        protected void onPreExecute() {
+            progreso = new ProgressDialog(MainActivity.this);
+            progreso.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+            progreso.setMessage("Calculando...");
+            progreso.setCancelable(false);
+            progreso.setMax(100);
+            progreso.setProgress(0);
+            progreso.show();
+        }
+
+        @Override
+        protected Integer doInBackground(Integer... n) {
+            int res = 1;
+            for (int i = 1; i <= n[0]; i++) {
+                res *= i;
+                SystemClock.sleep(1000);
+                publishProgress(i * 100 / n[0]);
+            }
+            return res;
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... porc) {
+            progreso.setProgress(porc[0]);
+        }
+
+        @Override
+        protected void onPostExecute(Integer res) {
+            progreso.dismiss();
+        }
+    }
+
 }
