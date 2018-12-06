@@ -16,6 +16,11 @@ import maa.asteroids.R;
 public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
     private LayoutInflater inflador;
     private List<String> lista;
+    protected View.OnClickListener onClickListener;
+
+    public void setOnItemClickListener(View.OnClickListener onClickListener) {
+        this.onClickListener = onClickListener;
+    }
 
     public Adapter(Context context, List<String> lista) {
         this.lista = lista;
@@ -26,6 +31,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = inflador.inflate(R.layout.list_elements, parent, false);
+        v.setOnClickListener(onClickListener);
         return new ViewHolder(v);
     }
 

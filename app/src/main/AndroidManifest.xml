@@ -20,7 +20,10 @@
             android:name=".About"
             android:theme="@style/Theme.AppCompat.Dialog" />
         <activity android:name=".Settings" />
-        <activity android:name=".Score"></activity>
+        <activity android:name=".Score" />
+        <activity
+            android:name=".Game"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"></activity>
     </application>
 
 </manifest>

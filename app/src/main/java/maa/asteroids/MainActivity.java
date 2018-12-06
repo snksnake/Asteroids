@@ -65,7 +65,8 @@ public class MainActivity extends AppCompatActivity {
         btnPlay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                final Intent intent = new Intent(MainActivity.this, Game.class);
+                startActivity(intent);
             }
         });
     }
