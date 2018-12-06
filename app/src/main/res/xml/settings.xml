@@ -18,4 +18,12 @@
         android:key="fragmentos"
         android:summary="En cuantos trozos se divide un asteroide"
         android:title="Número de Fragmentos" />
+
+    <MultiSelectListPreference
+        android:defaultValue="@array/inputTypesValues"
+        android:key="validInputs"
+        android:entries="@array/inputTypes"
+        android:entryValues="@array/inputTypesValues"
+        android:summary="@string/input_type"
+        android:title="@string/input_type_header"/>
 </PreferenceScreen>

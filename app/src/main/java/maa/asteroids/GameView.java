@@ -7,7 +7,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.PathShape;
@@ -16,26 +15,18 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.media.AudioAttributes;
-import android.media.AudioManager;
-import android.media.SoundPool;
 import android.preference.PreferenceManager;
-import android.support.graphics.drawable.VectorDrawableCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.content.res.AppCompatResources;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ImageView;
 
 import java.util.ArrayList;
-import java.util.Hashtable;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
-public class GameView extends View {
+public class GameView extends View implements SensorEventListener {
     private List<Graphic> asteroides; // Lista con los Asteroides
     private int numAsteroides = 5; // Número inicial de asteroides
     private int giroNave; // Incremento de dirección
@@ -58,13 +49,31 @@ public class GameView extends View {
     Drawable drawableAsteroide;
     Drawable drawableMisil;
 
+    private float mX = 0, mY = 0;
+    private boolean disparo = false;
+
+    private boolean valueSettings = false;
+    private float optionSettings;
+
+    // //// MISIL //////
+    private Graphic misil;
+    private static int PASO_VELOCIDAD_MISIL = 12;
+    private boolean misilActivo = false;
+    private int tiempoMisil;
+
+    private Set<String> validInputs;
+
+    private boolean pause;
+
     public GameView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
         Resources resources = context.getResources();
         //drawableAsteroide = AppCompatResources.getDrawable(context, R.drawable.asteroide1);
 
-        SharedPreferences pref = PreferenceManager. getDefaultSharedPreferences(getContext());
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getContext());
+        validInputs = pref.getStringSet("validInputs", null);
+
         if (pref.getString("graficos", "1").equals("0")) {
             setLayerType(View.LAYER_TYPE_SOFTWARE, null);
             Path pathAsteroide = new Path();
@@ -80,19 +89,30 @@ public class GameView extends View {
             pathAsteroide.lineTo((float) 0.0, (float) 0.6);
             pathAsteroide.lineTo((float) 0.0, (float) 0.2);
             pathAsteroide.lineTo((float) 0.3, (float) 0.0);
-            ShapeDrawable dAsteroide = new ShapeDrawable( new PathShape(pathAsteroide, 1, 1));
+            ShapeDrawable dAsteroide = new ShapeDrawable(new PathShape(pathAsteroide, 1, 1));
             dAsteroide.getPaint().setColor(Color.WHITE);
             dAsteroide.getPaint().setStyle(Paint.Style.STROKE);
             dAsteroide.setIntrinsicWidth(50);
             dAsteroide.setIntrinsicHeight(50);
             drawableAsteroide = dAsteroide;
             setBackgroundColor(Color.BLACK);
+
+
+
         } else {
             setLayerType(View.LAYER_TYPE_HARDWARE, null);
             drawableAsteroide =
                     AppCompatResources.getDrawable(context, R.drawable.asteroide1);
             drawableNave =
                     AppCompatResources.getDrawable(context, R.drawable.nave);
+        }
+
+        SensorManager mSensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
+        List<Sensor> listSensors = mSensorManager.getSensorList(Sensor.TYPE_ORIENTATION);
+        if (!listSensors.isEmpty()) {
+            Sensor orientationSensor = listSensors.get(0);
+            mSensorManager.registerListener(this, orientationSensor,
+                    SensorManager.SENSOR_DELAY_GAME);
         }
 
         asteroides = new ArrayList<>();
@@ -115,9 +135,9 @@ public class GameView extends View {
 // Una vez que conocemos nuestro ancho y alto.
         for (Graphic asteroide : asteroides) {
             do {
-                asteroide.setCenX((int) (Math.random()*ancho));
-                asteroide.setCenY((int) (Math.random()*alto));
-            } while(asteroide.distancia(nave) < (ancho+alto)/5);
+                asteroide.setCenX((int) (Math.random() * ancho));
+                asteroide.setCenY((int) (Math.random() * alto));
+            } while (asteroide.distancia(nave) < (ancho + alto) / 5);
         }
         ultimoProceso = System.currentTimeMillis();
         thread.start();
@@ -131,6 +151,7 @@ public class GameView extends View {
         }
         nave.dibujaGrafico(canvas);
     }
+
     protected void actualizaFisica() {
         long ahora = System.currentTimeMillis();
         if (ultimoProceso + PERIODO_PROCESO > ahora) {
@@ -155,48 +176,38 @@ public class GameView extends View {
     }
 
     @Override
-    public boolean onKeyDown(int codigoTecla, KeyEvent evento) {
-        super.onKeyDown(codigoTecla, evento);
-// Suponemos que vamos a procesar la pulsación
-        boolean procesada = true;
-        switch (codigoTecla) {
-            case KeyEvent.KEYCODE_DPAD_UP:
-                aceleracionNave = +PASO_ACELERACION_NAVE;
-                break;
-            case KeyEvent.KEYCODE_DPAD_LEFT:
-                giroNave = -PASO_GIRO_NAVE;
-                break;
-            case KeyEvent.KEYCODE_DPAD_RIGHT:
-                giroNave = +PASO_GIRO_NAVE;
-                break;
-            case KeyEvent.KEYCODE_DPAD_CENTER:
-            case KeyEvent.KEYCODE_ENTER:
-                //activaMisil();
-                break;
-            default:
-                procesada = false;
-                break;
+    public void onSensorChanged(SensorEvent event) {
+        if (validInputs.contains("2")) {
+            switch (event.sensor.getType()) {
+                case Sensor.TYPE_ORIENTATION:
+                    //float valor = event.values[1];
+                    //if (!valueSettings) {
+                    //    optionSettings = valor;
+                    //    valueSettings = true;
+                    //}
+                    //giroNave = (int) (valor - optionSettings) / 3;
+                    //break;
+                case Sensor.TYPE_ACCELEROMETER:
+                    float valor = event.values[1];
+                    if (!valueSettings) {
+                        optionSettings = valor;
+                        valueSettings = true;
+                    }
+                    giroNave = (int) (valor - optionSettings) / 2;
+
+                    float valorA = event.values[2];
+                    if (!valueSettings) {
+                        optionSettings = valorA;
+                        valueSettings = true;
+                    }
+                    aceleracionNave = (valorA - optionSettings) / 28;
+                    break;
+            }
         }
-        return procesada;
     }
 
-    @Override public boolean onKeyUp(int codigoTecla, KeyEvent evento) {
-        super.onKeyUp(codigoTecla, evento);
-        boolean procesada = true;
-        switch (codigoTecla) {
-            case KeyEvent.KEYCODE_DPAD_UP:
-                aceleracionNave = 0;
-                break;
-            case KeyEvent.KEYCODE_DPAD_LEFT:
-            case KeyEvent.KEYCODE_DPAD_RIGHT:
-                giroNave = 0;
-                break;
-            default:
-// Si estamos aquí, no hay pulsación que nos interese
-                procesada = false;
-                break;
-        }
-        return procesada;
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
     }
 
     private class ThreadJuego extends Thread {
@@ -206,5 +217,117 @@ public class GameView extends View {
                 actualizaFisica();
             }
         }
+    }
+
+    @Override
+    public boolean onKeyUp(int codigoTecla, KeyEvent evento) {
+        super.onKeyUp(codigoTecla, evento);
+// Suponemos que vamos a procesar la pulsación
+        boolean procesada = validInputs.contains("0");
+        if (procesada) {
+            switch (codigoTecla) {
+                case KeyEvent.KEYCODE_DPAD_UP:
+                    aceleracionNave = 0;
+                    break;
+                case KeyEvent.KEYCODE_DPAD_LEFT:
+                case KeyEvent.KEYCODE_DPAD_RIGHT:
+                    giroNave = 0;
+                    break;
+                default:
+// Si estamos aquí, no hay pulsación que nos interese
+                    procesada = false;
+                    break;
+            }
+        }
+        return procesada;
+    }
+
+    @Override
+    public boolean onKeyDown(int codigoTecla, KeyEvent evento) {
+        super.onKeyDown(codigoTecla, evento);
+// Suponemos que vamos a procesar la pulsación
+        boolean procesada = validInputs.contains("0");
+        if (procesada) {
+            switch (codigoTecla) {
+                case KeyEvent.KEYCODE_DPAD_UP:
+                    aceleracionNave = +PASO_ACELERACION_NAVE;
+                    break;
+                case KeyEvent.KEYCODE_DPAD_LEFT:
+                    giroNave = -PASO_GIRO_NAVE;
+                    break;
+                case KeyEvent.KEYCODE_DPAD_RIGHT:
+                    giroNave = +PASO_GIRO_NAVE;
+                    break;
+                case KeyEvent.KEYCODE_DPAD_CENTER:
+                case KeyEvent.KEYCODE_ENTER:
+                    //activaMisil();
+                    break;
+                default:
+// Si estamos aquí, no hay pulsación que nos interese
+                    procesada = false;
+                    break;
+            }
+        }
+        return procesada;
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        super.onTouchEvent(event);
+        float x = event.getX();
+        float y = event.getY();
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                disparo = true;
+                break;
+            case MotionEvent.ACTION_MOVE:
+                if (validInputs.contains("1")) {
+                    float dx = Math.abs(x - mX);
+                    float dy = Math.abs(y - mY);
+                    if (dy < 6 && dx > 6) {
+                        giroNave = Math.round((x - mX) / 2);
+                        disparo = false;
+                    } else if (dx < 6 && dy > 6) {
+                        aceleracionNave = Math.round((mY - y) / 25);
+                        disparo = false;
+                    }
+                }
+                break;
+            case MotionEvent.ACTION_UP:
+                giroNave = 0;
+                aceleracionNave = 0;
+                if (disparo) {
+                    //activaMisil();
+                }
+                break;
+        }
+        mX = x;
+        mY = y;
+        return disparo || validInputs.contains("1");
+    }
+
+    public void enableSensors(Context context) {
+        SensorManager mSensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
+        List<Sensor> listSensors = mSensorManager.getSensorList(Sensor.TYPE_ORIENTATION);
+        if (!listSensors.isEmpty()) {
+            Sensor orientationSensor = listSensors.get(0);
+            mSensorManager.registerListener(this, orientationSensor, SensorManager.SENSOR_DELAY_GAME);
+        }
+
+        listSensors = mSensorManager.getSensorList(Sensor.TYPE_ACCELEROMETER);
+        if (!listSensors.isEmpty()) {
+            Sensor acelerometerSensor = listSensors.get(0);
+            mSensorManager.registerListener(this, acelerometerSensor, SensorManager.SENSOR_DELAY_GAME);
+        }
+    }
+
+    public ThreadJuego getThread() {
+        return thread;
+    }
+
+    public synchronized void continueGame() {
+        pause = false;
+        ultimoProceso = System.currentTimeMillis();
+        notify();
     }
 }
